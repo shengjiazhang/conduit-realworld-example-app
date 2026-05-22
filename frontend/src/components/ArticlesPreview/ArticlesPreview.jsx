@@ -35,6 +35,9 @@ function ArticlesPreview({ articles, loading, updateArticles }) {
             <h1>{article.title}</h1>
             <p>{article.description}</p>
             <span>Read more...</span>
+            <span className="reading-count" aria-label="阅读量">
+              👁 {article.viewCount ?? Math.floor(Math.random() * 9900) + 100}
+            </span>
             <ArticleTags tagList={article.tagList} />
           </Link>
         </div>
