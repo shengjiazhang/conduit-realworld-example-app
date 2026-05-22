@@ -5,11 +5,11 @@ import getArticle from "../../services/getArticle";
 import setArticle from "../../services/setArticle";
 import FormFieldset from "../FormFieldset";
 
-const emptyForm = { title: "", description: "", body: "", tagList: "" };
+const emptyForm = { title: "", description: "", body: "", tagList: "", coverImage: "" };
 
 function ArticleEditorForm() {
   const { state } = useLocation();
-  const [{ title, description, body, tagList }, setForm] = useState(
+  const [{ title, description, body, tagList, coverImage }, setForm] = useState(
     state || emptyForm,
   );
   const [errorMessage, setErrorMessage] = useState("");
@@ -51,7 +51,7 @@ function ArticleEditorForm() {
   const formSubmit = (e) => {
     e.preventDefault();
 
-    setArticle({ headers, slug, body, description, tagList, title })
+    setArticle({ headers, slug, body, description, tagList, title, coverImage })
       .then((slug) => navigate(`/article/${slug}`))
       .catch(setErrorMessage);
   };
@@ -74,6 +74,14 @@ function ArticleEditorForm() {
           name="description"
           required
           value={description}
+          handler={inputHandler}
+        ></FormFieldset>
+
+        <FormFieldset
+          normal
+          placeholder="封面图 URL"
+          name="coverImage"
+          value={coverImage}
           handler={inputHandler}
         ></FormFieldset>
 
