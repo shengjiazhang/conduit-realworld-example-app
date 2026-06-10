@@ -6,6 +6,7 @@ module.exports = {
     database: process.env.DEV_DB_NAME,
     host: process.env.DEV_DB_HOSTNAME,
     dialect: process.env.DEV_DB_DIALECT,
+    storage: process.env.DEV_DB_STORAGE,
     logging: process.env.DEV_DB_LOGGING,
   },
   test: {
