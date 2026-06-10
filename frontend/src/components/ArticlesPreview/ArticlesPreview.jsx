@@ -32,6 +32,14 @@ function ArticlesPreview({ articles, loading, updateArticles }) {
             state={article}
             className="preview-link"
           >
+            {article.coverImage && article.coverImage.trim() !== '' && (
+              <img
+                src={article.coverImage}
+                alt={article.title}
+                className="article-preview-cover"
+                style={{ width: '100%', height: '180px', objectFit: 'cover', marginBottom: '1rem' }}
+              />
+            )}
             <h1>{article.title}</h1>
             <p>{article.description}</p>
             <span>Read more...</span>

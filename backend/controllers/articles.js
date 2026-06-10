@@ -76,10 +76,22 @@ const createArticle = async (req, res, next) => {
     const { loggedUser } = req;
     if (!loggedUser) throw new UnauthorizedError();
 
-    const { title, description, body, tagList } = req.body.article;
+    const { title, description, body, tagList, coverImage } = req.body.article;
     if (!title) throw new FieldRequiredError("A title");
     if (!description) throw new FieldRequiredError("A description");
     if (!body) throw new FieldRequiredError("An article body");
+
+    // Validate coverImage if provided
+    if (coverImage !== undefined && coverImage !== '') {
+      if (coverImage.length > 2048) {
+        throw new FieldRequiredError("Cover image URL must not exceed 2048 characters");
+      }
+      try {
+        new URL(coverImage);
+      } catch (e) {
+        throw new FieldRequiredError("Cover image must be a valid URL");
+      }
+    }
 
     const slug = slugify(title);
     const slugInDB = await Article.findOne({ where: { slug: slug } });
@@ -90,6 +102,7 @@ const createArticle = async (req, res, next) => {
       title: title,
       description: description,
       body: body,
+      coverImage: coverImage || '',
     });
 
     for (const tag of tagList) {
@@ -184,17 +197,32 @@ const updateArticle = async (req, res, next) => {
     });
     if (!article) throw new NotFoundError("Article");
 
+    // Existing author permission check ensures only owner can modify article including coverImage
     if (loggedUser.id !== article.author.id) {
       throw new ForbiddenError("article");
     }
 
-    const { title, description, body } = req.body.article;
+    const { title, description, body, coverImage } = req.body.article;
     if (title) {
       article.slug = slugify(title);
       article.title = title;
     }
     if (description) article.description = description;
     if (body) article.body = body;
+    // Validate and update coverImage if provided
+    if (coverImage !== undefined) {
+      if (coverImage !== '') {
+        if (coverImage.length > 2048) {
+          throw new FieldRequiredError("Cover image URL must not exceed 2048 characters");
+        }
+        try {
+          new URL(coverImage);
+        } catch (e) {
+          throw new FieldRequiredError("Cover image must be a valid URL");
+        }
+      }
+      article.coverImage = coverImage;
+    }
     await article.save();
 
     appendTagList(article.tagList, article);

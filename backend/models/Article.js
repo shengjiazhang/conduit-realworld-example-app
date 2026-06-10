@@ -47,6 +47,27 @@ module.exports = (sequelize, DataTypes) => {
       title: DataTypes.STRING,
       description: DataTypes.TEXT,
       body: DataTypes.TEXT,
+      coverImage: {
+        type: DataTypes.STRING(2048),
+        allowNull: false,
+        defaultValue: "",
+        validate: {
+          validUrlIfPresent(value) {
+            if (value && value.trim() !== "") {
+              try {
+                new URL(value);
+              } catch (e) {
+                throw new Error("Cover image must be a valid URL");
+              }
+            }
+          },
+          maxLength(value) {
+            if (value.length > 2048) {
+              throw new Error("Cover image URL cannot exceed 2048 characters");
+            }
+          }
+        }
+      },
     },
     {
       sequelize,
