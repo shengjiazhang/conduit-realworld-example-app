@@ -1,17 +1,21 @@
 import { useFeedContext } from "../../context/FeedContext";
 
-function TagButton({ tagsList }) {
+function TagButton({ name, bold = false }) {
   const { changeTab } = useFeedContext();
 
   const handleClick = (e) => {
     changeTab(e, "tag");
   };
 
-  return tagsList.slice(0, 50).map((name) => (
-    <button className="tag-pill tag-default" key={name} onClick={handleClick}>
+  return (
+    <button
+      className="tag-pill tag-default"
+      onClick={handleClick}
+      style={bold ? { fontWeight: 'bold' } : {}}
+    >
       {name}
     </button>
-  ));
+  );
 }
 
 export default TagButton;

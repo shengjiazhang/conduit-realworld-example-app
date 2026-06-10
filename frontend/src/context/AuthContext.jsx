@@ -31,7 +31,11 @@ function AuthProvider({ children }) {
 
     getUser({ headers })
       .then((loggedUser) => setAuthState((prev) => ({ ...prev, loggedUser })))
-      .catch(console.error);
+      .catch((error) => {
+        console.error(error);
+        localStorage.removeItem("loggedUser");
+        setAuthState(authState);
+      });
   }, [headers, setAuthState]);
 
   return (
