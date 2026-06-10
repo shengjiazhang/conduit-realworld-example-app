@@ -3,6 +3,15 @@ import ArticleMeta from "../ArticleMeta";
 import ArticleTags from "../ArticleTags";
 import FavButton from "../FavButton";
 
+const getStableViewCount = (slug) => {
+  if (!slug) return 0;
+  let hash = 0;
+  for (let i = 0; i < slug.length; i++) {
+    hash = slug.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return Math.abs(hash) % 10000;
+};
+
 function ArticlesPreview({ articles, loading, updateArticles }) {
   const handleFav = (article) => {
     const items = [...articles];
@@ -35,6 +44,10 @@ function ArticlesPreview({ articles, loading, updateArticles }) {
             <h1>{article.title}</h1>
             <p>{article.description}</p>
             <span>Read more...</span>
+            <span className="views-count float-right">
+              <i className="ion-eye mr-1"></i>
+              {getStableViewCount(article.slug)}
+            </span>
             <ArticleTags tagList={article.tagList} />
           </Link>
         </div>
